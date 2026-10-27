@@ -1,0 +1,33 @@
+{
+    "version": "5.5.4",
+    "description": "Software uninstaller with support for additional cleanup of registries/files",
+    "homepage": "https://www.revouninstaller.com/products/revo-uninstaller-pro/",
+    "license": "Proprietary",
+    "url": "https://revouninstaller.b-cdn.net/rup554/revouninproport.zip",
+    "hash": "dca19acbbdb17e7db436cc817fa15b596fe519434268518663b18e592a09a04b",
+    "extract_dir": "RevoUninstallerPro_Portable",
+    "shortcuts": [
+        [
+            "RevoUPPort.exe",
+            "Revo Uninstaller Pro"
+        ]
+    ],
+    "persist": [
+        "Data",
+        [
+            "settings.ini",
+            "settings.ini"
+        ],
+        [
+            "license.dat",
+            "license.dat"
+        ]
+    ],
+    "checkver": {
+        "url": "https://www.revouninstaller.com/revo-uninstaller-pro-full-version-history/",
+        "regex": "href=\"(?<url>[^\"]+/rup(?<rup>[\\d]+)/revouninproport\\.zip)\"[^>]*>\\s*PORTABLE\\s+([\\d.]+)"
+    },
+    "autoupdate": {
+        "url": "https://revouninstaller.b-cdn.net/rup$cleanVersion/revouninproport.zip"
+    }
+}
