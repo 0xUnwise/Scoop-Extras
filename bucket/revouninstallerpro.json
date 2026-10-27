@@ -6,6 +6,25 @@
     "url": "https://revouninstaller.b-cdn.net/rup554/revouninproport.zip",
     "hash": "dca19acbbdb17e7db436cc817fa15b596fe519434268518663b18e592a09a04b",
     "extract_dir": "RevoUninstallerPro_Portable",
+    "pre_install": [
+        "$parent = Split-Path $dir",
+        "$oldDll = \"$parent\\current\\x64\\RUExt.dll\"",
+        "if (Test-Path $oldDll) {",
+        "    Start-Process 'regsvr32.exe' -ArgumentList '/u', '/s', \"`\"$oldDll`\"\" -Wait",
+        "}",
+        "$isLocked = Get-Process explorer -ErrorAction SilentlyContinue | Where-Object { $_.Modules.ModuleName -contains 'RUExt.dll' }",
+        "if ($isLocked) {",
+        "    Stop-Process -Name explorer -Force",
+        "    Start-Sleep -Seconds 1",
+        "}",
+        "Get-ChildItem $parent -Directory | Where-Object { $_.Name -notin @($version, 'current') } | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue"
+    ],
+    "post_install": [
+        "$newDll = \"$dir\\x64\\RUExt.dll\"",
+        "if (Test-Path $newDll) {",
+        "    Start-Process 'regsvr32.exe' -ArgumentList '/s', \"`\"$newDll`\"\" -Wait",
+        "}"
+    ],
     "shortcuts": [
         [
             "RevoUPPort.exe",
@@ -23,6 +42,18 @@
             "license.dat"
         ]
     ],
+    "uninstaller": {
+        "script": [
+            "$dll = \"$dir\\x64\\RUExt.dll\"",
+            "if (Test-Path $dll) {",
+            "    Start-Process 'regsvr32.exe' -ArgumentList '/u', '/s', \"`\"$dll`\"\" -Wait",
+            "}",
+            "$isLocked = Get-Process explorer -ErrorAction SilentlyContinue | Where-Object { $_.Modules.ModuleName -contains 'RUExt.dll' }",
+            "if ($isLocked) {",
+            "    Stop-Process -Name explorer -Force",
+            "}"
+        ]
+    },
     "checkver": {
         "url": "https://www.revouninstaller.com/revo-uninstaller-pro-full-version-history/",
         "regex": "href=\"(?<url>[^\"]+/rup(?<rup>[\\d]+)/revouninproport\\.zip)\"[^>]*>\\s*PORTABLE\\s+([\\d.]+)"
